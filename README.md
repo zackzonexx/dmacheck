@@ -15,4 +15,4 @@ To check muted alert for production in datadog and send alert to opsgenie if any
 * Install python dependencies requirements to your local host
 > pip install -r requirements.txt
 * Execute this main python script 
-> python3 script/main.py
+> python3 package/main.py
