@@ -13,4 +13,4 @@ push:
 	docker push $(CHECKER_IMAGE):$(CHECKER_VERSION)
 
 check:
-	@./scripts/main.py
+	@./package/main.py
