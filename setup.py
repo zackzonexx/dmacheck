@@ -14,7 +14,7 @@ setup(
     url='https://github.com/zackzonexx/datadog-muted-alert-checker',
     author='Zackzonexx',
     author_email='zackzonexx@gmail.com',
-    packages=['dmacdd'],
+    packages=['package'],
     keywords='Datadog Muted Alert Checker',
     classifiers=[
         'Programming Language :: Python :: 2.7',
