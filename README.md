@@ -16,3 +16,6 @@ To check muted alert for production in datadog and send alert to opsgenie if any
 > pip install -r requirements.txt
 * Execute this main python script 
 > python3 package/main.py
+
+.. |pypi| image:: https://badge.fury.io/py/datadog-muted-alert-checker.svg
+   :target: https://pypi.python.org/pypi/datadog-muted-alert-checker
