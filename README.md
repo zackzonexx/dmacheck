@@ -1,4 +1,4 @@
-# Datadog Muted Alert Checker
+# Datadog Muted Alert Checker |pypi|
 
 To check muted alert for production in datadog and send alert to opsgenie if any
 
