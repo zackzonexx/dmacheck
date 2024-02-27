@@ -11,7 +11,7 @@ setup(
     version='1.0.0',
     license='MIT',
     long_description=long_description,
-    url='https://github.com/zackzonexx/datadog-muted-alert-checker',
+    url='https://github.com/zackzonexx/datadog-muted-alert-checker.git',
     author='Zackzonexx',
     author_email='zackzonexx@gmail.com',
     packages=['package'],
