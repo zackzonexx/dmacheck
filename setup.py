@@ -8,7 +8,7 @@ with open('README.rst', 'r') as f:
 
 setup(
     name='datadog-muted-alert-checker',
-    version='1.0.0',
+    version='1.0.1',
     license='MIT',
     long_description=long_description,
     url='https://github.com/zackzonexx/datadog-muted-alert-checker.git',
