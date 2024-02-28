@@ -1,121 +1,106 @@
-from unittest import result
-import datadog
-import opsgenie_sdk
-import os
+import argparse
 import sys
-from time import sleep
-from pprint import pprint
-from opsgenie_sdk.rest import ApiException
 from googleapiclient.discovery import build
 from google.oauth2 import service_account
-
-# get muted alert in datadog
-def get_datadog_key(api_key, app_key):
-    # initialize connection to datadog api
-    datadog.initialize(api_key=api_key, app_key=app_key)
-    # query to datadog api
-    muted = datadog.api.Monitor.search(query="notification:opsgenie-xxx-xxx",per_page=1000,page=2)
-    result = {}
-    for monitor in muted['monitors']:
-        name = monitor['name']
-        for notification in monitor['name']:
-            if not notification.startswith('priority'):
-                continue
-            elif notification not in result:
-                result[notification] = []
-            result[notification]
-        print (name)
-        return result
-
-#prepare create payload for opsgenie
-def create_alert_payload(id, monitor_ids):
-    count = 0
-    total = sum (count == 0 for value in monitor_ids)
-
-    return opsgenie_sdk.CreateAlertPayload(
-        message=f'[P3] [Datadog-Checker] Muted monitor in production is {total} alert(s)',
-        description=f'Datadog alerting in production for {id} is muted. Please check your list muted monitor below and unmute it, or close this alert if this is expected : \n- https://app.datadoghq.com/monitors/manage?q=muted%3Atrue%20env%3Aproduction%20notification%3Aopsgenie-{id}',
-        responders=[{
-            'name': f'{id}',
-            'type': 'team'
-            }],
-        visible_to=[
-            {'name': f'{id}',
-            'type': 'team'}],
-        note='This alert generate by me',
-        user='zackzonexx',
-        priority='P3',
-        source='Datadog Muted Alert Checker Tools',
-    )
-
-# Check if env variable declare or not
-def get_env_value(key):
-    value = os.environ.get(key, None)
-    if not value:
-        print(f'ERROR: environment {key} is needed')
-        sys.exit(1)
-    return value
+from package.datadog_utils import get_muted_alerts
+from package.opsgenie_utils import create_alert_payload
 
 
 def main():
-    #define necessary variables here
-    api_key = get_env_value('DATADOG_API_KEY')
-    app_key = get_env_value('DATADOG_APP_KEY')
-    sa_path = get_env_value('GCP_SA')
-    opsgenie_api_key = get_env_value('OPSGENIE_API_KEY')
-    opsgenie_configuration = opsgenie_sdk.Configuration()
-    opsgenie_configuration.api_key['Authorization'] = opsgenie_api_key
-    opsgenie_alert_api_instance = opsgenie_sdk.AlertApi(opsgenie_sdk.ApiClient(opsgenie_configuration))
-    name = get_datadog_key(api_key, app_key)
-    SCOPES = ['https://www.googleapis.com/auth/spreadsheets']
-    creds = service_account.Credentials.from_service_account_file(sa_path,scopes=SCOPES)
-    SPREADSHEET_ID = 'redacted'
-    RANGE_NAME = 'redacted'
-    service = build('sheets', 'v4', credentials= creds)
-    sheet = service.spreadsheets()
-    values = [
-                [name]
-            ]
-    body = {
-            'values': values,
-            'majorDimension': 'ROWS'
-             }
-    result = sheet.values().append(spreadsheetId=SPREADSHEET_ID, range=RANGE_NAME,valueInputOption='RAW', body=body)
-    result.execute()
-    get_datadog_key(api_key, app_key)
-    for monitor_name in name.__getitem__(result):
-        print (monitor_name)
-    Clear the spreadsheet
-    bods = {}
-    request = sheet.values().clear(spreadsheetId=SPREADSHEET_ID, range=RANGE_NAME, body=bods)
-    request.execute()
+    parser = argparse.ArgumentParser(
+        description="Process muted alerts from Datadog and update a Google Sheets document"
+    )
+    parser.add_argument(
+        "--datadog-api-key", dest="datadog_api_key", help="Datadog API key"
+    )
+    parser.add_argument(
+        "--datadog-app-key", dest="datadog_app_key", help="Datadog app key"
+    )
+    parser.add_argument(
+        "--team-name", dest="team_name", help="Team name for Datadog alerts"
+    )
+    parser.add_argument(
+        "--opsgenie-api-key", dest="opsgenie_api_key", help="Opsgenie API key"
+    )
+    parser.add_argument(
+        "--gcp-sa", dest="gcp_sa", help="Path to Google Cloud service account JSON file"
+    )
+    parser.add_argument(
+        "--spreadsheet-id", dest="spreadsheet_id", help="Google Sheets spreadsheet ID"
+    )
+    parser.add_argument(
+        "--range-name", dest="range_name", help="Google Sheets range name"
+    )
+    args = parser.parse_args()
 
-    ##condition
-    if name == {}:
-        print ("There is no muted Alert in production")
+    # Check if required arguments are provided
+    if not all(
+        [
+            args.datadog_api_key,
+            args.datadog_app_key,
+            args.team_name,
+            args.opsgenie_api_key,
+            args.gcp_sa,
+            args.spreadsheet_id,
+            args.range_name,
+        ]
+    ):
+        parser.print_help(sys.stderr)
+        sys.exit(1)
+
+    # Retrieve command-line arguments
+    api_key = args.datadog_api_key
+    app_key = args.datadog_app_key
+    team_name = args.team_name
+    opsgenie_api_key = args.opsgenie_api_key
+    sa_path = args.gcp_sa
+    spreadsheet_id = args.spreadsheet_id
+    range_name = args.range_name
+
+    # Retrieve muted alerts from Datadog
+    muted_alerts = get_muted_alerts(api_key, app_key, team_name)
+
+    # Initialize Google Sheets service
+    SCOPES = ["https://www.googleapis.com/auth/spreadsheets"]
+    creds = service_account.Credentials.from_service_account_file(
+        sa_path, scopes=SCOPES
+    )
+    service = build("sheets", "v4", credentials=creds)
+    sheet = service.spreadsheets()
+
+    # Update Google Sheets with muted alerts
+    values = [[muted_alerts]]
+    body = {"values": values, "majorDimension": "ROWS"}
+    result = sheet.values().append(
+        spreadsheetId=spreadsheet_id,
+        range=range_name,
+        valueInputOption="RAW",
+        body=body,
+    )
+    result.execute()
+
+    # Process muted alerts
+    if not muted_alerts:
+        print("There are no muted alerts in production")
         sys.exit(0)
     else:
-        for notification in name.items():
-            print (notification)
-            id = opsgenie_id.replace('opsgenie-','')
+        for notification, monitor_ids in muted_alerts.items():
+            print(notification, monitor_ids)
+            id = notification.replace("priority ", "")
             alert_payload = create_alert_payload(id, monitor_ids)
-            count = 0
-            total = sum (count == 0 for value in monitor_ids)
             try:
-                opsgenie_alert_api_instance.create_alert(alert_payload)
-                print(f'Alert for {opsgenie_id} Created')
-                values = [
-                            [id, f'https://app.datadoghq.com/monitors/manage?q=muted%3Atrue%20env%3Aproduction%20notification%3Aopsgenie-{id}',total]
-                         ]
-                body = {
-                        'values': values,
-                        'majorDimension': 'ROWS'
-                       }
-                result = sheet.values().append(spreadsheetId=SPREADSHEET_ID, range=RANGE_NAME,valueInputOption='RAW', body=body)
-                result.execute()
-                sleep(1)
-            except opsgenie_sdk.rest.ApiException as e:
-                print(f'Got error while executing {opsgenie_id}, detail {e}')
+                # Code for Opsgenie API integration
+                pass
+            except Exception as e:
+                print(f"Error occurred while creating alert for {id}: {e}")
 
-if __name__ == '__main__':
+    # Clear the spreadsheet
+    clear_body = {}
+    request = sheet.values().clear(
+        spreadsheetId=spreadsheet_id, range=range_name, body=clear_body
+    )
+    request.execute()
+
+
+if __name__ == "__main__":
     main()
