@@ -2,8 +2,8 @@ import argparse
 import sys
 from googleapiclient.discovery import build
 from google.oauth2 import service_account
-from package.datadog_utils import get_muted_alerts
-from package.opsgenie_utils import create_alert_payload
+from datadog_utils import get_muted_alerts
+from opsgenie_utils import create_alert_payload
 
 
 def main():
