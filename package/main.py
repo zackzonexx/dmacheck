@@ -46,7 +46,7 @@ def main():
         ]
     ):
         parser.print_help(sys.stderr)
-        sys.exit(1)
+        sys.exit(2)
 
     # Retrieve command-line arguments
     api_key = args.datadog_api_key
