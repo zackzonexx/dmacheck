@@ -29,5 +29,6 @@ setup(
         "google-auth",
         "google-auth-httplib2",
         "google-api-python-client",
+        "pytest",
     ],
 )
