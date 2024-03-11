@@ -24,7 +24,7 @@ def main():
         "--datadog-app-key", dest="datadog_app_key", help="Datadog app key"
     )
     parser.add_argument(
-        "--team-name", dest="team_name", help="Team name for Datadog alerts"
+        "--team-name", dest="team_name", help="Team name for Datadog alert"
     )
     parser.add_argument(
         "--opsgenie-api-key", dest="opsgenie_api_key", help="Opsgenie API key"
