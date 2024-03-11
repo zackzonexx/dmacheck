@@ -4,16 +4,41 @@ from package.main import main
 
 
 @pytest.mark.parametrize(
-    "args, expected_team_name",
+    "args, expected_team_name, expected_datadog_api_key, expected_datadog_app_key, expected_opsgenie_api_key",
     [
-        (["main.py", "--team-name", "dummy_team"], "dummy_team"),
+        (
+            [
+                "main.py",
+                "--datadog-api-key",
+                "dummy_api_key",
+                "--datadog-app-key",
+                "dummy_app_key",
+                "--team-name",
+                "dummy_team",
+                "--opsgenie-api-key",
+                "dummy_opsgenie_key",
+            ],
+            "dummy_team",
+            "dummy_api_key",
+            "dummy_app_key",
+            "dummy_opsgenie_key",
+        ),
         # Add more test cases as needed
     ],
 )
-def test_main_with_args(args, expected_team_name):
+def test_main_with_args(
+    args,
+    expected_team_name,
+    expected_datadog_api_key,
+    expected_datadog_app_key,
+    expected_opsgenie_api_key,
+):
     # Call the main function with the mocked command line arguments
     with patch("sys.argv", args):
         main()
 
-    # Access expected_team_name within the test function
+    # Access expected_team_name, expected_datadog_api_key, expected_datadog_app_key, and expected_opsgenie_api_key within the test function
     assert expected_team_name == "dummy_team"
+    assert expected_datadog_api_key == "dummy_api_key"
+    assert expected_datadog_app_key == "dummy_app_key"
+    assert expected_opsgenie_api_key == "dummy_opsgenie_key"
