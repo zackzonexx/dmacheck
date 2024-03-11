@@ -2,16 +2,16 @@ from setuptools import setup, find_packages
 
 
 setup(
-    name="datadog-muted-alert-checker",
-    version="1.0.2",
+    name="dmacheck",
+    version="1.0.3",
     license="MIT",
-    url="https://github.com/zackzonexx/datadog-muted-alert-checker",
+    url="https://github.com/zackzonexx/dmacheck",
     author="Zackzonexx",
     long_description=open("README.rst").read(),
     long_description_content_type="text/x-rst",
     author_email="zackzonexx@gmail.com",
     packages=find_packages(),
-    keywords="Datadog Muted Alert Checker",
+    keywords="dmacheck",
     classifiers=[
         "License :: OSI Approved :: MIT License",  # Specify your license type
         "Programming Language :: Python :: 3",
@@ -26,14 +26,11 @@ setup(
         "opsgenie-sdk",
         "requests",
         "urllib3",
-        "google-auth",
-        "google-auth-httplib2",
-        "google-api-python-client",
         "pytest",
     ],
     entry_points={
         "console_scripts": [
-            "datadog-checker=package.main:main",
+            "dmacheck=package.main:main",
         ],
     },
 )
