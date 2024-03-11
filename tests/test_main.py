@@ -1,5 +1,5 @@
 import unittest
-from unittest.mock import patch
+from unittest.mock import patch, MagicMock
 from package.main import main
 
 
@@ -9,22 +9,35 @@ class TestMain(unittest.TestCase):
         [
             "main.py",
             "--datadog-api-key",
-            "YOUR_DATADOG_API_KEY",
+            "dummy_api_key",
             "--datadog-app-key",
-            "YOUR_DATADOG_APP_KEY",
+            "dummy_app_key",
             "--team-name",
-            "YOUR_TEAM_NAME",
+            "dummy_team",
             "--opsgenie-api-key",
-            "YOUR_OPSGENIE_API_KEY",
+            "dummy_opsgenie_key",
         ],
     )
-    def test_main_function(self):
-        # Call the main function and check if it runs without errors
-        with self.assertRaises(SystemExit) as cm:
-            main()
+    @patch("package.main.get_muted_alerts")
+    @patch("package.main.create_alert_payload")
+    def test_main_function(self, mock_create_alert_payload, mock_get_muted_alerts):
+        # Mocking return values
+        mock_get_muted_alerts.return_value = {
+            "alert1": ["123", "456"],
+            "alert2": ["789"],
+        }
 
-        # Check if the exit status code is 0 (no errors expected)
-        self.assertEqual(cm.exception.code, 0)
+        # Call the main function
+        main()
+
+        # Check if get_muted_alerts was called with correct arguments
+        mock_get_muted_alerts.assert_called_once_with(
+            "dummy_api_key", "dummy_app_key", "dummy_team"
+        )
+
+        # Check if create_alert_payload was called with correct arguments
+        mock_create_alert_payload.assert_any_call("alert1", ["123", "456"])
+        mock_create_alert_payload.assert_any_call("alert2", ["789"])
 
 
 if __name__ == "__main__":
