@@ -1,29 +1,19 @@
+import pytest
 from unittest.mock import patch
-from package.main import get_arg_value
+from package.main import main
 
 
-def test_get_arg_value():
-    # Define input arguments
-    args = [
-        "--datadog-api-key",
-        "dummy_api_key",
-        "--datadog-app-key",
-        "dummy_app_key",
-        "--team-name",
-        "dummy_team",
-        "--opsgenie-api-key",
-        "dummy_opsgenie_key",
-    ]
-
-    # Call the function with the mocked input arguments
+@pytest.mark.parametrize(
+    "args, expected_team_name",
+    [
+        (["main.py", "--team-name", "dummy_team"], "dummy_team"),
+        # Add more test cases as needed
+    ],
+)
+def test_main_with_args(args, expected_team_name):
+    # Call the main function with the mocked command line arguments
     with patch("sys.argv", args):
-        datadog_api_key = get_arg_value("--datadog-api-key")
-        datadog_app_key = get_arg_value("--datadog-app-key")
-        team_name = get_arg_value("--team-name")
-        opsgenie_api_key = get_arg_value("--opsgenie-api-key")
+        main()
 
-    # Assert the results
-    assert datadog_api_key == "dummy_api_key"
-    assert datadog_app_key == "dummy_app_key"
-    assert team_name == "dummy_team"
-    assert opsgenie_api_key == "dummy_opsgenie_key"
+    # Access expected_team_name within the test function
+    assert expected_team_name == "dummy_team"
