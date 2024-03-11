@@ -3,7 +3,7 @@ from setuptools import setup, find_packages
 
 setup(
     name="dmacheck",
-    version="1.0.3",
+    version="1.0.4",
     license="MIT",
     url="https://github.com/zackzonexx/dmacheck",
     author="Zackzonexx",
