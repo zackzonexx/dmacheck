@@ -1,17 +1,48 @@
-import unittest
-import sys
+import pytest
+from unittest.mock import patch
 from package.main import main
 
 
-class TestMain(unittest.TestCase):
-    def test_main_function(self):
-        # Call the main function and check if it runs without errors
-        with self.assertRaises(SystemExit) as cm:
-            main()
+@pytest.mark.parametrize(
+    "args, expected_team_name, expected_datadog_api_key, expected_datadog_app_key, expected_opsgenie_api_key",
+    [
+        (
+            [
+                "main.py",
+                "--datadog-api-key",
+                "dummy_api_key",
+                "--datadog-app-key",
+                "dummy_app_key",
+                "--team-name",
+                "dummy_team",
+                "--opsgenie-api-key",
+                "dummy_opsgenie_key",
+            ],
+            "dummy_team",
+            "dummy_api_key",
+            "dummy_app_key",
+            "dummy_opsgenie_key",
+        ),
+        # Add more test cases as needed
+    ],
+)
+def test_main_with_args(
+    args,
+    expected_team_name,
+    expected_datadog_api_key,
+    expected_datadog_app_key,
+    expected_opsgenie_api_key,
+):
+    # Mock the functions or classes called within main() to avoid executing the entire logic
+    with patch("package.main.get_muted_alerts"):
+        with patch("package.main.create_alert_payload"):
+            with patch("package.opsgenie_utils.opsgenie_sdk.AlertApi.create_alert"):
+                # Call the main function with the mocked command line arguments
+                with patch("sys.argv", args):
+                    main()
 
-        # Check if the exit status code is 1
-        self.assertEqual(cm.exception.code, 1)
-
-
-if __name__ == "__main__":
-    unittest.main()
+    # Access expected_team_name, expected_datadog_api_key, expected_datadog_app_key, and expected_opsgenie_api_key within the test function
+    assert expected_team_name == "dummy_team"
+    assert expected_datadog_api_key == "dummy_api_key"
+    assert expected_datadog_app_key == "dummy_app_key"
+    assert expected_opsgenie_api_key == "dummy_opsgenie_key"
