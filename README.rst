@@ -40,3 +40,9 @@ How To Use this module in your local host
 
         python3 package/main.py
 
+* If using this as a module just import this module in your code 
+
+.. code-block:: python
+
+        import dmacheck
+
