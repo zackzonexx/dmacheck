@@ -34,9 +34,9 @@ def test_main_with_args(
     expected_opsgenie_api_key,
 ):
     # Mock the functions or classes called within main() to avoid executing the entire logic
-    with patch("package.main.get_muted_alerts"):
-        with patch("package.main.create_alert_payload"):
-            with patch("package.opsgenie_utils.opsgenie_sdk.AlertApi.create_alert"):
+    with patch("dmacheck.main.get_muted_alerts"):
+        with patch("dmacheck.main.create_alert_payload"):
+            with patch("dmacheck.opsgenie_utils.opsgenie_sdk.AlertApi.create_alert"):
                 # Call the main function with the mocked command line arguments
                 with patch("sys.argv", args):
                     main()
