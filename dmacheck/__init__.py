@@ -1,3 +1,3 @@
-from package import *
+from dmacheck import *
 
 __version__ = "1.0.0"
