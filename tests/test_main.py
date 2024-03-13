@@ -1,6 +1,6 @@
 import pytest
 from unittest.mock import patch
-from package.main import main
+from dmacheck.main import main
 
 
 @pytest.mark.parametrize(

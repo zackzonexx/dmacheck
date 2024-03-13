@@ -1,8 +1,8 @@
 import argparse
 import sys
 import opsgenie_sdk
-from package.datadog_utils import get_muted_alerts
-from package.opsgenie_utils import create_alert_payload
+from dmacheck.datadog_utils import get_muted_alerts
+from dmacheck.opsgenie_utils import create_alert_payload
 
 
 # Check if argument is declared or not

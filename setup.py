@@ -30,7 +30,9 @@ setup(
     ],
     entry_points={
         "console_scripts": [
-            "dmacheck=dmacheck.package.main:main",
+            "dmacheck=dmacheck.main:main",
         ],
     },
 )
+
+print(find_packages())
