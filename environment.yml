@@ -1,13 +1,17 @@
 name: production
 
 channels:
-  - defaults  # Default conda channel
-  - conda-forge
+  - conda-forge  # Add conda-forge channel for opsgenie-sdk
 
 dependencies:
-  - python=3.8*
-  - opsgenie-sdk
+  - python=3.7*  # Assuming Python 3.7 or compatible (adjust if needed)
+  - opsgenie-sdk  # From conda-forge
   - datadog
   - requests
   - urllib3
   - pytest
+
+- pip:
+    - ipython  # Interactive Python shell
+    - jupyter  # Jupyter Notebook
+    - flake8  # Code linter
