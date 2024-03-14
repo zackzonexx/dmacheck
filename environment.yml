@@ -4,7 +4,7 @@ channels:
   - conda-forge  # Add conda-forge channel for opsgenie-sdk
 
 dependencies:
-  - python=3.7*  # Assuming Python 3.7 or compatible (adjust if needed)
+  - python=3.10*  # Assuming Python 3.10 or compatible (adjust if needed)
   - opsgenie-sdk  # From conda-forge
   - datadog
   - requests
