@@ -1,6 +1,7 @@
 name: production
 
 channels:
+  - default
   - conda-forge  # Add conda-forge channel for opsgenie-sdk
 
 dependencies:
