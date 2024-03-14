@@ -1,0 +1,12 @@
+name: production
+
+channels:
+  - defaults  # Default conda channel
+
+dependencies:
+  - python=3.8*
+  - opsgenie-sdk
+  - datadog
+  - requests
+  - urllib3
+  - pytest
