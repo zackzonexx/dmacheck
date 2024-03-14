@@ -2,10 +2,11 @@ name: production
 
 channels:
   - defaults  # Default conda channel
+  - conda-forge
 
 dependencies:
   - python=3.8*
-  - opsgenie-python-sdk
+  - opsgenie-sdk
   - datadog
   - requests
   - urllib3
