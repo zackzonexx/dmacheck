@@ -10,8 +10,3 @@ dependencies:
   - requests
   - urllib3
   - pytest
-
-- pip:
-    - ipython  # Interactive Python shell
-    - jupyter  # Jupyter Notebook
-    - flake8  # Code linter
