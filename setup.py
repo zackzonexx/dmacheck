@@ -3,7 +3,7 @@ from setuptools import setup, find_packages
 
 setup(
     name="dmacheck",
-    version="1.0.5",
+    version="1.0.6",
     license="MIT",
     url="https://github.com/zackzonexx/dmacheck",
     author="Zackzonexx",
@@ -33,4 +33,7 @@ setup(
             "dmacheck=dmacheck.main:main",
         ],
     },
+    project_urls={
+        "Source": "https://github.com/zackzonexx/dmacheck",
+    }
 )
