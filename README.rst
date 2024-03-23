@@ -1,6 +1,5 @@
 Datadog Muted Alert Checker 
 ==============================
-
 .. image:: https://img.shields.io/pypi/v/dmacheck
 
 To check muted alert for production in datadog and send alert to opsgenie if any
